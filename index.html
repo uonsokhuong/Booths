@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Booth</title>
+	<style type="text/css">
+		
+		body {
+			margin: 0;
+			font-family: arial;
+		}
+
+		canvas {
+			display: block;
+			background: linear-gradient( #bbe2fe,#67d1fb );
+		}
+
+	</style>
+</head>
+<body>
+	<script src="https://threejs.org/build/three.min.js"></script>
+	<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+	<script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
+	<script src="app.js"></script>
+	<script>
+		
+		var app = new BoothApp();
+		app.animate();
+
+	</script>
+</body>
+</html>
