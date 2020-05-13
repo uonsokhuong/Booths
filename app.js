@@ -84,53 +84,51 @@ function BoothApp() {
 		var x = size.x + 1;
 		var z = 1;
 		
-		var aisle = new THREE.Group();
-
-		aisle.add( createObject3D( -x * 1.5, 0, 0, 0, -Math.PI / 2, 0, 2, 1, 1 ) );
-		aisle.add( createObject3D( -x, 0, -z, 0, Math.PI, 0, 1, 1, 1 ) );
-		aisle.add( createObject3D( -x, 0, z, 0, 0, 0, 1, 1, 1 ) );
-		aisle.add( createObject3D( 0, 0, -z, 0, Math.PI, 0, 1, 1, 1 ) );
-		aisle.add( createObject3D( 0, 0, z, 0, 0, 0, 1, 1, 1 ) );
-		aisle.add( createObject3D( x, 0, -z, 0, Math.PI, 0, 1, 1, 1 ) );
-		aisle.add( createObject3D( x, 0, z, 0, 0, 0, 1, 1, 1 ) );
-
-		aisle.children[ 0 ].add( scene.clone() );
-		aisle.children[ 1 ].add( scene.clone() );
-		aisle.children[ 2 ].add( scene.clone() );
-		aisle.children[ 3 ].add( scene.clone() );
-		aisle.children[ 4 ].add( scene.clone() );
-		aisle.children[ 5 ].add( scene.clone() );
-		aisle.children[ 6 ].add( scene.clone() );
-
-		scope.aisles.push( aisle );
-
-		box = new THREE.Box3().setFromObject( aisle );
-		size = box.getSize( size );
-
 		var X = 2;
 		var Z = 3;
 
 		var marginX = 5;
 		var marginZ = 10;
 
+		var aisleLayout = new THREE.Group();
+		
+		aisleLayout.add( createObject3D( -x * 1.5, 0, 0, 0, -Math.PI / 2, 0, 2, 1, 1 ) );
+		aisleLayout.add( createObject3D( -x, 0, -z, 0, Math.PI, 0, 1, 1, 1 ) );
+		aisleLayout.add( createObject3D( -x, 0, z, 0, 0, 0, 1, 1, 1 ) );
+		aisleLayout.add( createObject3D( 0, 0, -z, 0, Math.PI, 0, 1, 1, 1 ) );
+		aisleLayout.add( createObject3D( 0, 0, z, 0, 0, 0, 1, 1, 1 ) );
+		aisleLayout.add( createObject3D( x, 0, -z, 0, Math.PI, 0, 1, 1, 1 ) );
+		aisleLayout.add( createObject3D( x, 0, z, 0, 0, 0, 1, 1, 1 ) );
+
 		for ( var z = 0; z < Z; z ++ ) {
 
 			for ( var x = 0; x < X; x ++ ) {
 
-				var clone = aisle.clone();
+				var aisle = aisleLayout.clone();
 
-				clone.rotation.y = ( x % 2 ) * Math.PI;
+				aisle.children[ 0 ].add( scope.createBooth() );
+				aisle.children[ 1 ].add( scope.createBooth() );
+				aisle.children[ 2 ].add( scope.createBooth() );
+				aisle.children[ 3 ].add( scope.createBooth() );
+				aisle.children[ 4 ].add( scope.createBooth() );
+				aisle.children[ 5 ].add( scope.createBooth() );
+				aisle.children[ 6 ].add( scope.createBooth() );
 
-				clone.position.x = ( - X / 2 + x ) * ( size.x + marginX );
-				clone.position.z = ( - Z / 2 + z ) * ( size.z + marginZ );
+				scope.scene.add( aisle );
 
-				scope.scene.add( clone );
+				box = new THREE.Box3().setFromObject( aisle );
+				size = box.getSize( size );
+
+				aisle.rotation.y = ( x % 2 ) * Math.PI;
+
+				aisle.position.x = ( - X / 2 + x ) * ( size.x + marginX );
+				aisle.position.z = ( - Z / 2 + z ) * ( size.z + marginZ );
+
+				scope.aisles.push( aisle );
 
 			}
 
 		}
-
-		// scope.scene.add( aisle );
 
 	} );
 
@@ -140,31 +138,23 @@ function BoothApp() {
 
 Object.assign( BoothApp.prototype, {
 
-	isIcon: function( object ) {
-	
-		return object.name.indexOf( 'Ico' ) > -1;
-
-	},
-
 	createBooth: function( x, y, z ) {
 
 		if ( ! this.gltfBoothScene ) return;
 
 		var object = new THREE.Object3D();
 
-		object.position.set( x, y, z );
+		// object.position.set( x, y, z );
 
-		var scope = this;
-		var cloned = this.gltfBoothScene.clone();
-		object.add( cloned );
+		object.add( this.gltfBoothScene.clone() );
 
 		object.userData = { icons: [] };
 
-		var index = scope.booths.length;
+		var index = this.booths.length;
 
 		object.traverse( function ( child ) {
 
-			if ( scope.isIcon( child ) ) {
+			if ( child.name.indexOf( 'Ico' ) > -1 ) {
 				
 				object.userData.icons.push( child );
 				
@@ -221,8 +211,6 @@ Object.assign( BoothApp.prototype, {
 				pointStart.copy( pointEnd );
 
 			}
-
-			return;
 
 			raycaster.setFromCamera( mouse, scope.camera );
 
@@ -335,7 +323,7 @@ Object.assign( BoothApp.prototype, {
 		this.movement.x *= 0.95;
 		this.movement.z *= 0.95;
 
-		/*var scope = this;
+		var scope = this;
 
 		var zero = new THREE.Vector3();
 
@@ -354,7 +342,7 @@ Object.assign( BoothApp.prototype, {
 
 			} );
 
-		}*/
+		}
 
 		this.renderer.render( this.scene, this.camera );
 
