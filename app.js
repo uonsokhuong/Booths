@@ -193,7 +193,6 @@ Object.assign( BoothApp.prototype, {
 		var isLeftMouseBtnDown = false;
 
 		this.renderer.domElement.style.cursor = 'grab';
-		return;
 
 		var hoveredIcon = null;
 
@@ -211,6 +210,8 @@ Object.assign( BoothApp.prototype, {
 				pointStart.copy( pointEnd );
 
 			}
+
+			return;
 
 			raycaster.setFromCamera( mouse, scope.camera );
 
@@ -333,8 +334,8 @@ Object.assign( BoothApp.prototype, {
 
 			this.booths[ i ].userData.icons.forEach( function ( icon ) {
 
-				// if ( icon.localToWorld( zero ).distanceTo( scope.camera.position ) > 10.0 ) icon.visible = false;
-				// else icon.visible = true;
+				if ( icon.localToWorld( zero ).distanceTo( scope.camera.position ) > 10.0 ) icon.visible = false;
+				else icon.visible = true;
 
 				icon.rotation.z += 0.05;
 
